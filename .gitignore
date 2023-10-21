@@ -1,0 +1,7 @@
+.idea
+
+default.etcd
+
+/**/*.yaml
+
+!**/*_example.yaml

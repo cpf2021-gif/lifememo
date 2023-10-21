@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package service;
+option go_package = "./service";
+
+service User {
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+  rpc FindById(FindByIdRequest) returns (FindByIdResponse);
+  rpc FindByEmail(FindByEmailRequest) returns (FindByEmailResponse);
+}
+
+message RegisterRequest {
+  string username = 1;
+  string email = 2;
+}
+
+message RegisterResponse {
+  int64 userId = 1;
+}
+
+message FindByIdRequest {
+  int64 userId = 1;
+}
+
+message FindByIdResponse {
+  int64 userId = 1;
+  string username = 2;
+  string email = 3;
+}
+
+message FindByEmailRequest {
+  string email = 1;
+}
+
+message FindByEmailResponse {
+  int64 userId = 1;
+  string username = 2;
+}
