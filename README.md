@@ -7,7 +7,7 @@ LifeMemo is a social media application that allows you to share your moments wit
 The creation of this project was motivated by the desire to learn how to build microservices projects using the Go programming language.
 
 ## Features
-- [ ] User Acounts
+- [X] User Acounts
 - [ ] Timeline
 - [ ] Comments
 - [ ] Private Messages
@@ -15,7 +15,6 @@ The creation of this project was motivated by the desire to learn how to build m
 
 ## Technologies
 - [Go](https://golang.org/)
-- [React](https://reactjs.org/)
 
 ## References
 - Backend : [https://github.com/zhoushuguang/beyond](https://github.com/zhoushuguang/beyond)
