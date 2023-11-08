@@ -2,18 +2,18 @@ package logic
 
 import (
 	"context"
-	"github.com/zeromicro/go-zero/core/stores/redis"
+	"strings"
+
 	"lifememo/application/applet/api/internal/code"
+	"lifememo/application/applet/api/internal/svc"
+	"lifememo/application/applet/api/internal/types"
 	"lifememo/application/user/rpc/user"
 	"lifememo/pkg/encrypt"
 	"lifememo/pkg/jwt"
 	"lifememo/pkg/util"
-	"strings"
-
-	"lifememo/application/applet/api/internal/svc"
-	"lifememo/application/applet/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/stores/redis"
 )
 
 type RegisterLogic struct {
@@ -49,6 +49,7 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (*types.RegisterRes
 		return nil, code.EmailFormatError
 	}
 
+	// 加密邮箱
 	email, err := encrypt.EncEmail(req.Email)
 
 	// 邮箱是否已经注册
@@ -71,7 +72,7 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (*types.RegisterRes
 		return nil, code.VerificationCodeEmpty
 	}
 
-	err = checkVerificationCode(l.svcCtx.BizRedis, req.Email, req.VerificationCode)
+	err = checkVerificationCode(l.svcCtx.BizRedis, email, req.VerificationCode)
 	if err != nil {
 		logx.Errorf("checkVerificationCode error: %v", err)
 		return nil, err
@@ -101,7 +102,7 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (*types.RegisterRes
 	}
 
 	// 删除验证码缓存
-	_ = delActivationCache(req.Email, l.svcCtx.BizRedis)
+	_ = delActivationCache(email, l.svcCtx.BizRedis)
 
 	return &types.RegisterResponse{
 		UserId: reqRet.UserId,

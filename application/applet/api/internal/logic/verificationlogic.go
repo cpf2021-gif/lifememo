@@ -3,18 +3,20 @@ package logic
 import (
 	"context"
 	"fmt"
-	"github.com/jordan-wright/email"
-	"github.com/zeromicro/go-zero/core/stores/redis"
-	"lifememo/application/applet/api/internal/code"
-	"lifememo/pkg/util"
 	"net/smtp"
 	"strconv"
+	"strings"
 	"time"
 
+	"lifememo/application/applet/api/internal/code"
 	"lifememo/application/applet/api/internal/svc"
 	"lifememo/application/applet/api/internal/types"
+	"lifememo/pkg/encrypt"
+	"lifememo/pkg/util"
 
+	"github.com/jordan-wright/email"
 	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/stores/redis"
 )
 
 const (
@@ -40,23 +42,29 @@ func NewVerificationLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Veri
 
 func (l *VerificationLogic) Verification(req *types.VerificationRequest) (*types.VerificationResponse, error) {
 	// 验证邮箱格式
-	//req.Email = strings.TrimSpace(req.Email)
-	//err := util.ParseEmail(req.Email)
-	//if err != nil {
-	//	return nil, code.EmailFormatError
-	//}
+	req.Email = strings.TrimSpace(req.Email)
+	err := util.ParseEmail(req.Email)
+	if err != nil {
+		return nil, code.EmailFormatError
+	}
+
+	// 加密邮箱
+	encEmail, err := encrypt.EncEmail(req.Email)
+	if err != nil {
+		return nil, err
+	}
 
 	// 查询验证码发送次数
-	count, err := l.getVerificationCount(req.Email)
+	count, err := l.getVerificationCount(encEmail)
 	if err != nil {
 		logx.Errorf("getVerificationCount error: %v", err)
 	}
-	if count > verificationLimitPerDay {
+	if count >= verificationLimitPerDay {
 		return nil, code.VerificationCodeLimit
 	}
 
 	// 获取验证码(30分钟内有效)
-	ActivationCode, err := getActivationCache(req.Email, l.svcCtx.BizRedis)
+	ActivationCode, err := getActivationCache(encEmail, l.svcCtx.BizRedis)
 	if err != nil {
 		logx.Errorf("getActivationCache error: %v", err)
 	}
@@ -64,7 +72,7 @@ func (l *VerificationLogic) Verification(req *types.VerificationRequest) (*types
 	if len(ActivationCode) == 0 {
 		ActivationCode = util.RandomNumeric(6)
 		// 保存验证码
-		err = saveActivationCache(req.Email, ActivationCode, l.svcCtx.BizRedis)
+		err = saveActivationCache(encEmail, ActivationCode, l.svcCtx.BizRedis)
 		if err != nil {
 			logx.Errorf("saveActivationCache error: %v", err)
 			return nil, err
@@ -79,7 +87,7 @@ func (l *VerificationLogic) Verification(req *types.VerificationRequest) (*types
 	}
 
 	// 增加验证码发送次数
-	err = l.incrVerificationCount(req.Email)
+	err = l.incrVerificationCount(encEmail)
 	if err != nil {
 		logx.Errorf("incrVerificationCount error: %v", err)
 	}

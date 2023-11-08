@@ -2,16 +2,16 @@ package logic
 
 import (
 	"context"
+	"strings"
+
 	"lifememo/application/applet/api/internal/code"
+	"lifememo/application/applet/api/internal/svc"
+	"lifememo/application/applet/api/internal/types"
 	"lifememo/application/user/rpc/user"
 	"lifememo/pkg/encrypt"
 	"lifememo/pkg/jwt"
 	"lifememo/pkg/util"
 	"lifememo/pkg/xcode"
-	"strings"
-
-	"lifememo/application/applet/api/internal/svc"
-	"lifememo/application/applet/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -47,14 +47,15 @@ func (l *LoginLogic) Login(req *types.LoginRequest) (*types.LoginResponse, error
 		return nil, code.VerificationCodeEmpty
 	}
 
-	err = checkVerificationCode(l.svcCtx.BizRedis, req.Email, req.VerificationCode)
-	if err != nil {
-		return nil, code.VerificationCodeError
-	}
 	userEmail, err := encrypt.EncEmail(req.Email)
 	if err != nil {
 		logx.Errorf("EncEmail error: %v", err)
 		return nil, err
+	}
+
+	err = checkVerificationCode(l.svcCtx.BizRedis, userEmail, req.VerificationCode)
+	if err != nil {
+		return nil, code.VerificationCodeError
 	}
 
 	u, err := l.svcCtx.UserRpc.FindByEmail(l.ctx, &user.FindByEmailRequest{
@@ -81,6 +82,9 @@ func (l *LoginLogic) Login(req *types.LoginRequest) (*types.LoginResponse, error
 		return nil, err
 	}
 
+	// 删除验证码缓存
+	_ = delActivationCache(userEmail, l.svcCtx.BizRedis)
+
 	return &types.LoginResponse{
 		UserId: u.UserId,
 		Token: types.Token{
@@ -88,5 +92,4 @@ func (l *LoginLogic) Login(req *types.LoginRequest) (*types.LoginResponse, error
 			AccessExpire: token.AccessExpire,
 		},
 	}, nil
-
 }
