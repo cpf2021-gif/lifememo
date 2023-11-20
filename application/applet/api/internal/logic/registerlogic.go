@@ -50,11 +50,11 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (*types.RegisterRes
 	}
 
 	// 加密邮箱
-	email, err := encrypt.EncEmail(req.Email)
+	encEmail, err := encrypt.EncEmail(req.Email)
 
 	// 邮箱是否已经注册
 	u, err := l.svcCtx.UserRpc.FindByEmail(l.ctx, &user.FindByEmailRequest{
-		Email: email,
+		Email: encEmail,
 	})
 
 	if err != nil {
@@ -72,7 +72,7 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (*types.RegisterRes
 		return nil, code.VerificationCodeEmpty
 	}
 
-	err = checkVerificationCode(l.svcCtx.BizRedis, email, req.VerificationCode)
+	err = checkVerificationCode(l.svcCtx.BizRedis, encEmail, req.VerificationCode)
 	if err != nil {
 		logx.Errorf("checkVerificationCode error: %v", err)
 		return nil, err
@@ -81,7 +81,7 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (*types.RegisterRes
 	// 注册
 	reqRet, err := l.svcCtx.UserRpc.Register(l.ctx, &user.RegisterRequest{
 		Username: req.Name,
-		Email:    email,
+		Email:    encEmail,
 	})
 	if err != nil {
 		logx.Errorf("Register error: %v", err)
@@ -102,7 +102,7 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (*types.RegisterRes
 	}
 
 	// 删除验证码缓存
-	_ = delActivationCache(email, l.svcCtx.BizRedis)
+	_ = delActivationCache(encEmail, l.svcCtx.BizRedis)
 
 	return &types.RegisterResponse{
 		UserId: reqRet.UserId,

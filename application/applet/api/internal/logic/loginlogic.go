@@ -47,19 +47,19 @@ func (l *LoginLogic) Login(req *types.LoginRequest) (*types.LoginResponse, error
 		return nil, code.VerificationCodeEmpty
 	}
 
-	userEmail, err := encrypt.EncEmail(req.Email)
+	encEmail, err := encrypt.EncEmail(req.Email)
 	if err != nil {
 		logx.Errorf("EncEmail error: %v", err)
 		return nil, err
 	}
 
-	err = checkVerificationCode(l.svcCtx.BizRedis, userEmail, req.VerificationCode)
+	err = checkVerificationCode(l.svcCtx.BizRedis, encEmail, req.VerificationCode)
 	if err != nil {
 		return nil, code.VerificationCodeError
 	}
 
 	u, err := l.svcCtx.UserRpc.FindByEmail(l.ctx, &user.FindByEmailRequest{
-		Email: userEmail,
+		Email: encEmail,
 	})
 
 	if err != nil {
@@ -83,7 +83,7 @@ func (l *LoginLogic) Login(req *types.LoginRequest) (*types.LoginResponse, error
 	}
 
 	// 删除验证码缓存
-	_ = delActivationCache(userEmail, l.svcCtx.BizRedis)
+	_ = delActivationCache(encEmail, l.svcCtx.BizRedis)
 
 	return &types.LoginResponse{
 		UserId: u.UserId,
