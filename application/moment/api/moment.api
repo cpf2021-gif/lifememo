@@ -1,0 +1,20 @@
+syntax = "v1"
+
+type (
+	PublishRequest {
+		Content string `json:"content"`
+	}
+
+	PublishResponse {
+		MonmentId int64 `json:"monment_id"`
+	}
+)
+
+@server (
+	prefix: /v1/moment
+	jwt: Auth
+)
+service moment-api {
+	@handler PublishHandler
+	post /publish (PublishRequest) returns (PublishResponse)
+}
