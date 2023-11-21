@@ -3,10 +3,11 @@ package handler
 import (
 	"net/http"
 
-	"github.com/zeromicro/go-zero/rest/httpx"
 	"lifememo/application/applet/api/internal/logic"
 	"lifememo/application/applet/api/internal/svc"
 	"lifememo/application/applet/api/internal/types"
+
+	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func VerificationHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {

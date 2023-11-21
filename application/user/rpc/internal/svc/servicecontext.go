@@ -1,9 +1,10 @@
 package svc
 
 import (
-	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"lifememo/application/user/rpc/internal/config"
 	"lifememo/application/user/rpc/internal/model"
+
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 
 type ServiceContext struct {

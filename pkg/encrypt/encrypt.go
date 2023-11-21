@@ -2,6 +2,7 @@ package encrypt
 
 import (
 	"encoding/base64"
+
 	"github.com/zeromicro/go-zero/core/codec"
 )
 

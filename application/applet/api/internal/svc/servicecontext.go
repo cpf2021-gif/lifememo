@@ -1,11 +1,12 @@
 package svc
 
 import (
-	"github.com/zeromicro/go-zero/core/stores/redis"
-	"github.com/zeromicro/go-zero/zrpc"
 	"lifememo/application/applet/api/internal/config"
 	"lifememo/application/user/rpc/user"
 	"lifememo/pkg/interceptors"
+
+	"github.com/zeromicro/go-zero/core/stores/redis"
+	"github.com/zeromicro/go-zero/zrpc"
 )
 
 type ServiceContext struct {

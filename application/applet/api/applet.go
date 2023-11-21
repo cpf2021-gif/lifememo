@@ -3,15 +3,15 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/zeromicro/go-zero/rest/httpx"
-	"lifememo/pkg/xcode"
 
 	"lifememo/application/applet/api/internal/config"
 	"lifememo/application/applet/api/internal/handler"
 	"lifememo/application/applet/api/internal/svc"
+	"lifememo/pkg/xcode"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
+	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 var configFile = flag.String("f", "etc/applet-api.yaml", "the config file")
