@@ -6,7 +6,7 @@ CREATE TABLE `like_record` (
                                `biz_id` varchar(64) NOT NULL DEFAULT '' COMMENT '业务ID',
                                `obj_id` bigint(20) UNSIGNED NOT NULL DEFAULT '0' COMMENT '点赞对象id',
                                `user_id` bigint(20) UNSIGNED NOT NULL DEFAULT '0' COMMENT '用户ID',
-                               `like_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '类型 0:取消点赞 1:点赞 ',
+                               `like_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '类型 0:取消点赞 1:点赞',
                                `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
                                PRIMARY KEY (`id`),
