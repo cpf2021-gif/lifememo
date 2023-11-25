@@ -45,7 +45,6 @@ type (
 		BizId      string    `db:"biz_id"`      // 业务ID
 		ObjId      int64     `db:"obj_id"`      // 点赞对象id
 		LikeNum    int64     `db:"like_num"`    // 点赞数
-		DislikeNum int64     `db:"dislike_num"` // 点踩数
 		CreateTime time.Time `db:"create_time"` // 创建时间
 		UpdateTime time.Time `db:"update_time"` // 最后修改时间
 	}
@@ -114,8 +113,8 @@ func (m *defaultLikeCountModel) Insert(ctx context.Context, data *LikeCount) (sq
 	lifememoLikeLikeCountBizIdObjIdKey := fmt.Sprintf("%s%v:%v", cacheLifememoLikeLikeCountBizIdObjIdPrefix, data.BizId, data.ObjId)
 	lifememoLikeLikeCountIdKey := fmt.Sprintf("%s%v", cacheLifememoLikeLikeCountIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?)", m.table, likeCountRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.BizId, data.ObjId, data.LikeNum, data.DislikeNum)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?)", m.table, likeCountRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.BizId, data.ObjId, data.LikeNum)
 	}, lifememoLikeLikeCountBizIdObjIdKey, lifememoLikeLikeCountIdKey)
 	return ret, err
 }
@@ -130,7 +129,7 @@ func (m *defaultLikeCountModel) Update(ctx context.Context, newData *LikeCount) 
 	lifememoLikeLikeCountIdKey := fmt.Sprintf("%s%v", cacheLifememoLikeLikeCountIdPrefix, data.Id)
 	_, err = m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, likeCountRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, newData.BizId, newData.ObjId, newData.LikeNum, newData.DislikeNum, newData.Id)
+		return conn.ExecCtx(ctx, query, newData.BizId, newData.ObjId, newData.LikeNum, newData.Id)
 	}, lifememoLikeLikeCountBizIdObjIdKey, lifememoLikeLikeCountIdKey)
 	return err
 }

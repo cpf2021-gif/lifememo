@@ -27,11 +27,13 @@ func main() {
 	l := logic.NewUpdateLogic(ctx, svcCtx)
 
 	s := gocron.NewScheduler(time.UTC)
+
 	_, err := s.Every(30).Second().Do(l.Update)
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
+	fmt.Println("Starting cron server...")
 	s.StartBlocking()
 }

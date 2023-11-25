@@ -41,6 +41,12 @@ func (l *ThumbupLogic) Thumbup(in *service.ThumbupRequest) (*service.ThumbupResp
 		l.Logger.Errorf("json Marshal val:%v err: %v", msg, err)
 		return &service.ThumbupResponse{}, nil
 	}
+
+	likeType := int64(in.LikeType)
+	if likeType != types.Like && likeType != types.UnLike {
+		return &service.ThumbupResponse{}, nil
+	}
+
 	_, err = l.svcCtx.BizRedis.ZaddCtx(l.ctx, LikeCronKey, int64(in.LikeType), string(s))
 	if err != nil {
 		l.Logger.Errorf("ZaddCtx err: %v", err)

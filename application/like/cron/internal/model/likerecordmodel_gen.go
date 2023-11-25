@@ -45,7 +45,7 @@ type (
 		BizId      string    `db:"biz_id"`      // 业务ID
 		ObjId      int64     `db:"obj_id"`      // 点赞对象id
 		UserId     int64     `db:"user_id"`     // 用户ID
-		LikeType   int64     `db:"like_type"`   // 类型 0:点赞 1:点踩 2:无
+		LikeType   int64     `db:"like_type"`   // 类型 0:点赞 1:取消点赞
 		CreateTime time.Time `db:"create_time"` // 创建时间
 		UpdateTime time.Time `db:"update_time"` // 最后修改时间
 	}
