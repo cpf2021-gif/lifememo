@@ -13,6 +13,9 @@ The creation of this project was motivated by the desire to learn how to build m
 - [ ] Private Messages
 - more to come...
 
+## Architecture diagram
+![Architecture diagram](/doc/images/lifememo.png)
+
 ## Technologies
 - [Go](https://golang.org/)
 
