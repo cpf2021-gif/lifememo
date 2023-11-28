@@ -4,9 +4,9 @@ import (
 	"lifememo/application/moment/rpc/internal/config"
 	"lifememo/application/moment/rpc/internal/model"
 
-	"github.com/golang/groupcache/singleflight"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
+	"golang.org/x/sync/singleflight"
 )
 
 type ServiceContext struct {

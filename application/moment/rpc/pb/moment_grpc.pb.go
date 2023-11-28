@@ -19,7 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Moment_Publish_FullMethodName = "/pb.Moment/Publish"
+	Moment_Publish_FullMethodName      = "/pb.Moment/Publish"
+	Moment_Moments_FullMethodName      = "/pb.Moment/Moments"
+	Moment_MomentDelete_FullMethodName = "/pb.Moment/MomentDelete"
+	Moment_MomentDetail_FullMethodName = "/pb.Moment/MomentDetail"
 )
 
 // MomentClient is the client API for Moment service.
@@ -27,6 +30,9 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MomentClient interface {
 	Publish(ctx context.Context, in *PublishRequest, opts ...grpc.CallOption) (*PublishResponse, error)
+	Moments(ctx context.Context, in *MomentsRequest, opts ...grpc.CallOption) (*MomentsResponse, error)
+	MomentDelete(ctx context.Context, in *MomentDeleteRequest, opts ...grpc.CallOption) (*MomentDeleteResponse, error)
+	MomentDetail(ctx context.Context, in *MomentDetailRequest, opts ...grpc.CallOption) (*MomentDetailResponse, error)
 }
 
 type momentClient struct {
@@ -46,11 +52,41 @@ func (c *momentClient) Publish(ctx context.Context, in *PublishRequest, opts ...
 	return out, nil
 }
 
+func (c *momentClient) Moments(ctx context.Context, in *MomentsRequest, opts ...grpc.CallOption) (*MomentsResponse, error) {
+	out := new(MomentsResponse)
+	err := c.cc.Invoke(ctx, Moment_Moments_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *momentClient) MomentDelete(ctx context.Context, in *MomentDeleteRequest, opts ...grpc.CallOption) (*MomentDeleteResponse, error) {
+	out := new(MomentDeleteResponse)
+	err := c.cc.Invoke(ctx, Moment_MomentDelete_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *momentClient) MomentDetail(ctx context.Context, in *MomentDetailRequest, opts ...grpc.CallOption) (*MomentDetailResponse, error) {
+	out := new(MomentDetailResponse)
+	err := c.cc.Invoke(ctx, Moment_MomentDetail_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MomentServer is the server API for Moment service.
 // All implementations must embed UnimplementedMomentServer
 // for forward compatibility
 type MomentServer interface {
 	Publish(context.Context, *PublishRequest) (*PublishResponse, error)
+	Moments(context.Context, *MomentsRequest) (*MomentsResponse, error)
+	MomentDelete(context.Context, *MomentDeleteRequest) (*MomentDeleteResponse, error)
+	MomentDetail(context.Context, *MomentDetailRequest) (*MomentDetailResponse, error)
 	mustEmbedUnimplementedMomentServer()
 }
 
@@ -60,6 +96,15 @@ type UnimplementedMomentServer struct {
 
 func (UnimplementedMomentServer) Publish(context.Context, *PublishRequest) (*PublishResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Publish not implemented")
+}
+func (UnimplementedMomentServer) Moments(context.Context, *MomentsRequest) (*MomentsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Moments not implemented")
+}
+func (UnimplementedMomentServer) MomentDelete(context.Context, *MomentDeleteRequest) (*MomentDeleteResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MomentDelete not implemented")
+}
+func (UnimplementedMomentServer) MomentDetail(context.Context, *MomentDetailRequest) (*MomentDetailResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MomentDetail not implemented")
 }
 func (UnimplementedMomentServer) mustEmbedUnimplementedMomentServer() {}
 
@@ -92,6 +137,60 @@ func _Moment_Publish_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Moment_Moments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MomentsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MomentServer).Moments(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Moment_Moments_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MomentServer).Moments(ctx, req.(*MomentsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Moment_MomentDelete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MomentDeleteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MomentServer).MomentDelete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Moment_MomentDelete_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MomentServer).MomentDelete(ctx, req.(*MomentDeleteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Moment_MomentDetail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MomentDetailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MomentServer).MomentDetail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Moment_MomentDetail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MomentServer).MomentDetail(ctx, req.(*MomentDetailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Moment_ServiceDesc is the grpc.ServiceDesc for Moment service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -102,6 +201,18 @@ var Moment_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Publish",
 			Handler:    _Moment_Publish_Handler,
+		},
+		{
+			MethodName: "Moments",
+			Handler:    _Moment_Moments_Handler,
+		},
+		{
+			MethodName: "MomentDelete",
+			Handler:    _Moment_MomentDelete_Handler,
+		},
+		{
+			MethodName: "MomentDetail",
+			Handler:    _Moment_MomentDetail_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

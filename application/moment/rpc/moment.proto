@@ -5,13 +5,57 @@ option go_package="./pb";
 
 service Moment {
   rpc Publish(PublishRequest) returns (PublishResponse);
+  rpc Moments(MomentsRequest) returns (MomentsResponse);
+  rpc MomentDelete(MomentDeleteRequest) returns (MomentDeleteResponse);
+  rpc MomentDetail(MomentDetailRequest) returns (MomentDetailResponse);
 }
 
 message PublishRequest {
   int64 userId = 1;
   string content = 2;
+  int64 status = 3;
 }
 
 message PublishResponse {
   int64 momentId = 1;
+}
+
+message MomentsRequest {
+  int64 userId = 1;
+  int64 cursor = 2;
+  int64 pageSize = 3;
+  int32 sortType = 4;
+  int64 momentId = 5;
+}
+
+message MomentItem {
+  int64 Id = 1;
+  string content = 2;
+  int64 commentCount = 3;
+  int64 likeCount = 4;
+  int64 publishTime = 5;
+  int64 authorId = 6;
+}
+
+message MomentsResponse {
+  repeated MomentItem moments = 1;
+  bool isEnd = 2;
+  int64 cursor = 3;
+  int64 momentId = 4;
+}
+
+message MomentDeleteRequest {
+  int64 userId = 1;
+  int64 momentId = 2;
+}
+
+message MomentDeleteResponse {
+}
+
+message MomentDetailRequest {
+  int64 momentId = 1;
+}
+
+message MomentDetailResponse {
+  MomentItem moment = 1;
 }

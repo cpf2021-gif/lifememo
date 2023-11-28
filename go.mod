@@ -5,11 +5,11 @@ go 1.21
 require (
 	github.com/go-co-op/gocron v1.36.0
 	github.com/golang-jwt/jwt/v4 v4.5.0
-	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da
 	github.com/golang/protobuf v1.5.3
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/pkg/errors v0.9.1
 	github.com/zeromicro/go-zero v1.5.6
+	golang.org/x/sync v0.3.0
 	google.golang.org/grpc v1.59.0
 	google.golang.org/protobuf v1.31.0
 )

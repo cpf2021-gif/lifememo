@@ -3,10 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
-
 	"lifememo/application/moment/rpc/internal/config"
 	"lifememo/application/moment/rpc/internal/server"
 	"lifememo/application/moment/rpc/internal/svc"
+
 	"lifememo/application/moment/rpc/pb"
 	"lifememo/pkg/interceptors"
 
