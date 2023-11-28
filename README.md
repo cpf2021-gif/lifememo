@@ -8,9 +8,11 @@ The creation of this project was motivated by the desire to learn how to build m
 
 ## Features
 - [X] User Acounts
-- [ ] Timeline
+- [X] Post Moments
 - [ ] Comments
-- [ ] Private Messages
+- [ ] Follow Users
+- [ ] Like Moments/Comments
+- [ ] Timeline
 - more to come...
 
 ## Architecture diagram
