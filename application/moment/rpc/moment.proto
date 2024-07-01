@@ -8,6 +8,8 @@ service Moment {
   rpc Moments(MomentsRequest) returns (MomentsResponse);
   rpc MomentDelete(MomentDeleteRequest) returns (MomentDeleteResponse);
   rpc MomentDetail(MomentDetailRequest) returns (MomentDetailResponse);
+  rpc MomentUpdateContent(MomentUpdateContentRequest) returns (MomentUpdateContentResponse);
+  rpc RandomMoments(RandomMomentsRequest) returns (RandomMomentsResponse);
 }
 
 message PublishRequest {
@@ -58,4 +60,17 @@ message MomentDetailRequest {
 
 message MomentDetailResponse {
   MomentItem moment = 1;
+}
+
+message MomentUpdateContentRequest {
+  int64 momentId = 1;
+  string content = 2;
+}
+
+message MomentUpdateContentResponse {
+}
+
+message RandomMomentsRequest {}
+message RandomMomentsResponse {
+  repeated MomentItem moments = 1;
 }

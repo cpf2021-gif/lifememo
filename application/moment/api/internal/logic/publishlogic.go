@@ -36,6 +36,7 @@ func (l *PublishLogic) Publish(req *types.PublishRequest) (*types.PublishRespons
 	res, err := l.svcCtx.MomentRPC.Publish(l.ctx, &pb.PublishRequest{
 		UserId:  userId,
 		Content: req.Content,
+		Status:  types.MomentStatusVisible,
 	})
 	if err != nil {
 		logx.Error("l.svcCtx.MomentRPC.Publish req: %v userid: %d error: %v", req, userId, err)

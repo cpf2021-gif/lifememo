@@ -1,20 +1,83 @@
 syntax = "v1"
 
 type (
-	PublishRequest {
-		Content string `json:"content"`
-	}
-
-	PublishResponse {
-		MonmentId int64 `json:"monment_id"`
+	MomentItem {
+		Id           int64  `json:"id"`
+		AuthorId     int64  `json:"author_id"`
+		AuthorName   string `json:"author_name"`
+		Content      string `json:"content"`
+		CommentCount int64  `json:"comment_count"`
+		LikeCount    int64  `json:"like_count"`
+		PublishTime  int64  `json:"publish_time"`
 	}
 )
 
-@server (
+type (
+	// 发布动态
+	PublishRequest {
+		Content string `json:"content"`
+	}
+	PublishResponse {
+		MonmentId int64 `json:"monment_id"`
+	}
+
+	// 查看用户的动态
+	MomentsRequest {
+		UserId   int64 `json:"user_id"`
+		Cursor   int64 `json:"cursor"`
+		PageSize int64 `json:"page_size"`
+		SortType int32 `json:"sort_type"`
+		MomentId int64 `json:"moment_id"`
+	}
+	MomentsResponse {
+		Moments  []*MomentItem `json:"moments"`
+		Cursor   int64         `json:"cursor"`
+		IsEnd    bool          `json:"is_end"`
+		MomentId int64         `json:"moment_id"`
+	}
+
+	// 查看动态详情
+	MomentDetailRequest {
+		MomentId int64 `json:"moment_id"`
+	}
+	MomentDetailResponse {
+		Moment *MomentItem `json:"moment"`
+	}
+
+	// 删除动态
+	MomentDeleteRequest {
+		MomentId int64 `json:"moment_id"`
+	}
+	MomentDeleteResponse struct{}
+
+	// 更新动态
+	MomentUpdateRequest {
+		MomentId int64  `json:"moment_id"`
+		Content  string `json:"content"`
+	}
+	MomentUpdateResponse struct{}
+
+	// 查看随机动态
+	RandomMomentsResponse {
+		Moments []*MomentItem `json:"moments"`
+	}
+)
+
+@server(
 	prefix: /v1/moment
 	jwt: Auth
 )
 service moment-api {
 	@handler PublishHandler
 	post /publish (PublishRequest) returns (PublishResponse)
+	@handler MomentsHandler
+	post /moments (MomentsRequest) returns (MomentsResponse)
+	@handler MomentDetailHandler
+	post /detail (MomentDetailRequest) returns (MomentDetailResponse)
+	@handler MomentDeleteHandler
+	post /delete (MomentDeleteRequest) returns (MomentDeleteResponse)
+	@handler MomentUpdateHandler
+	post /update (MomentUpdateRequest) returns (MomentUpdateResponse)
+	@handler RandomMomentsHandler
+	get /random returns (RandomMomentsResponse)
 }

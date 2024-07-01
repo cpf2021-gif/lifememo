@@ -2,6 +2,9 @@ package logic
 
 import (
 	"context"
+	"errors"
+	"lifememo/application/user/rpc/internal/code"
+	"lifememo/application/user/rpc/internal/model"
 
 	"lifememo/application/user/rpc/internal/svc"
 	"lifememo/application/user/rpc/service"
@@ -27,6 +30,9 @@ func (l *FindByIdLogic) FindById(in *service.FindByIdRequest) (*service.FindById
 	user, err := l.svcCtx.UserModel.FindOne(l.ctx, in.UserId)
 	if err != nil {
 		logx.Errorf("FindById error: %v", err)
+		if errors.Is(err, model.ErrNotFound) {
+			return nil, code.UserIdNotFound
+		}
 		return nil, err
 	}
 

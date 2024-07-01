@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"lifememo/pkg/interceptors"
 
 	"lifememo/application/like/rpc/internal/config"
 	"lifememo/application/like/rpc/internal/server"
@@ -10,6 +11,7 @@ import (
 	"lifememo/application/like/rpc/service"
 
 	"github.com/zeromicro/go-zero/core/conf"
+	"github.com/zeromicro/go-zero/core/logx"
 	cs "github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
@@ -25,6 +27,8 @@ func main() {
 	conf.MustLoad(*configFile, &c)
 	ctx := svc.NewServiceContext(c)
 
+	logx.DisableStat()
+
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
 		service.RegisterLikeServer(grpcServer, server.NewLikeServer(ctx))
 
@@ -32,6 +36,10 @@ func main() {
 			reflection.Register(grpcServer)
 		}
 	})
+
+	// 自定义拦截器
+	s.AddUnaryInterceptors(interceptors.ServerErrorInterceptor())
+
 	defer s.Stop()
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)

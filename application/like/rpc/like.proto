@@ -5,6 +5,7 @@ option go_package="./service";
 
 service Like {
   rpc Thumbup(ThumbupRequest) returns (ThumbupResponse);
+  rpc isThumbuped(isThumbupedRequest) returns (isThumbupedResponse);
 }
 
 message ThumbupRequest {
@@ -14,9 +15,14 @@ message ThumbupRequest {
   int32 likeType = 4; // 类型
 }
 
-message ThumbupResponse {
+message ThumbupResponse {}
+
+message isThumbupedRequest {
   string bizId = 1; // 业务id
   int64 objId = 2; // 点赞对象id
-  int64 likeNum = 3; // 点赞数
-  int64 dislikeNum = 4; // 点踩数
+  int64 userId  = 3; // 用户id
+}
+
+message isThumbupedResponse {
+  bool isThumbuped = 1; // 是否点赞过
 }

@@ -9,9 +9,9 @@ The creation of this project was motivated by the desire to learn how to build m
 ## Features
 - [X] User Acounts
 - [X] Post Moments
-- [ ] Comments
-- [ ] Follow Users
-- [ ] Like Moments/Comments
+- [x] Comments
+- [x] Follow Users
+- [x] Like Moments/Comments
 - [ ] Timeline
 - more to come...
 

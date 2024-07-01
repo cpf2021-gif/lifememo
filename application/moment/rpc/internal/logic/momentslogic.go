@@ -93,11 +93,19 @@ func (l *MomentsLogic) Moments(in *pb.MomentsRequest) (*pb.MomentsResponse, erro
 		var cmpFunc func(a, b *model.Moment) int
 		if sortField == "like_num" {
 			cmpFunc = func(a, b *model.Moment) int {
-				return cmp.Compare(b.LikeNum, a.LikeNum)
+				if res := cmp.Compare(b.LikeNum, a.LikeNum); res != 0 {
+					return res
+				} else {
+					return cmp.Compare(b.Id, a.Id)
+				}
 			}
 		} else {
 			cmpFunc = func(a, b *model.Moment) int {
-				return cmp.Compare(b.PublishTime.Unix(), a.PublishTime.Unix())
+				if res := cmp.Compare(b.PublishTime.Unix(), a.PublishTime.Unix()); res != 0 {
+					return res
+				} else {
+					return cmp.Compare(b.Id, a.Id)
+				}
 			}
 		}
 		slices.SortFunc(moments, cmpFunc)

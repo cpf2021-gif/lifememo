@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"lifememo/application/follow/rpc/internal/code"
 	"lifememo/application/follow/rpc/internal/model"
 	"lifememo/application/follow/rpc/internal/types"
 	"strconv"
@@ -33,11 +34,11 @@ func NewFollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FollowLogi
 // Follow 关注
 func (l *FollowLogic) Follow(in *pb.FollowRequest) (*pb.FollowResponse, error) {
 	if in.UserId <= 0 || in.FollowedUserId <= 0 {
-		return &pb.FollowResponse{}, errors.New("参数错误")
+		return &pb.FollowResponse{}, code.FollowUserIdInvalid
 	}
 
 	if in.UserId == in.FollowedUserId {
-		return &pb.FollowResponse{}, errors.New("不能对自己进行操作")
+		return &pb.FollowResponse{}, code.DontFollowYourself
 	}
 
 	follow, err := l.svcCtx.FollowModel.FindOneByUserIdFollowedUserId(l.ctx, in.UserId, in.FollowedUserId)
@@ -47,7 +48,7 @@ func (l *FollowLogic) Follow(in *pb.FollowRequest) (*pb.FollowResponse, error) {
 	}
 
 	if follow != nil && follow.FollowStatus == types.FollowStatusFollow {
-		return &pb.FollowResponse{}, nil
+		return &pb.FollowResponse{}, code.Followed
 	}
 
 	// 事务

@@ -41,3 +41,13 @@ func (s *MomentServer) MomentDetail(ctx context.Context, in *pb.MomentDetailRequ
 	l := logic.NewMomentDetailLogic(ctx, s.svcCtx)
 	return l.MomentDetail(in)
 }
+
+func (s *MomentServer) MomentUpdateContent(ctx context.Context, in *pb.MomentUpdateContentRequest) (*pb.MomentUpdateContentResponse, error) {
+	l := logic.NewMomentUpdateContentLogic(ctx, s.svcCtx)
+	return l.MomentUpdateContent(in)
+}
+
+func (s *MomentServer) RandomMoments(ctx context.Context, in *pb.RandomMomentsRequest) (*pb.RandomMomentsResponse, error) {
+	l := logic.NewRandomMomentsLogic(ctx, s.svcCtx)
+	return l.RandomMoments(in)
+}

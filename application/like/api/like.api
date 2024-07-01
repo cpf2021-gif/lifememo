@@ -1,0 +1,21 @@
+syntax = "v1"
+
+type (
+	// 点赞服务
+	ThumbUpRequest {
+		BizId    string `json:"biz_id"`
+		ObjId    int64  `json:"obj_id"`
+		LikeType int32  `json:"like_type"`
+	}
+
+	ThumbUpResponse struct{}
+)
+
+@server(
+	prefix: /v1/like
+	jwt: Auth
+)
+service like-api {
+	@handler ThumbUp
+	post /thumbup (ThumbUpRequest) returns (ThumbUpResponse)
+}

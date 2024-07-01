@@ -17,6 +17,31 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/publish",
 				Handler: PublishHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/moments",
+				Handler: MomentsHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/detail",
+				Handler: MomentDetailHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/delete",
+				Handler: MomentDeleteHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/update",
+				Handler: MomentUpdateHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/random",
+				Handler: RandomMomentsHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/v1/moment"),

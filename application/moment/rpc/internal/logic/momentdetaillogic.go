@@ -2,8 +2,8 @@ package logic
 
 import (
 	"context"
+	"lifememo/application/moment/rpc/internal/code"
 	"lifememo/application/moment/rpc/internal/model"
-
 	"lifememo/application/moment/rpc/internal/svc"
 	"lifememo/application/moment/rpc/pb"
 
@@ -28,9 +28,13 @@ func (l *MomentDetailLogic) MomentDetail(in *pb.MomentDetailRequest) (*pb.Moment
 	moment, err := l.svcCtx.MomentModel.FindOne(l.ctx, in.MomentId)
 	if err != nil {
 		if err == model.ErrNotFound {
-			return &pb.MomentDetailResponse{}, nil
+			return &pb.MomentDetailResponse{}, code.MomentNotFound
 		}
 		return nil, err
+	}
+
+	if err = l.svcCtx.MomentModel.AddMomentViewNum(l.ctx, in.MomentId); err != nil {
+		l.Logger.Errorf("AddMomentViewNum error: %v", err)
 	}
 
 	return &pb.MomentDetailResponse{

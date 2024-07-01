@@ -26,3 +26,8 @@ func (s *LikeServer) Thumbup(ctx context.Context, in *service.ThumbupRequest) (*
 	l := logic.NewThumbupLogic(ctx, s.svcCtx)
 	return l.Thumbup(in)
 }
+
+func (s *LikeServer) IsThumbuped(ctx context.Context, in *service.IsThumbupedRequest) (*service.IsThumbupedResponse, error) {
+	l := logic.NewIsThumbupedLogic(ctx, s.svcCtx)
+	return l.IsThumbuped(in)
+}

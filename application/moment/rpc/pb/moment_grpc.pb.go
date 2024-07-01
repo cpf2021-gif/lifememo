@@ -19,10 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Moment_Publish_FullMethodName      = "/pb.Moment/Publish"
-	Moment_Moments_FullMethodName      = "/pb.Moment/Moments"
-	Moment_MomentDelete_FullMethodName = "/pb.Moment/MomentDelete"
-	Moment_MomentDetail_FullMethodName = "/pb.Moment/MomentDetail"
+	Moment_Publish_FullMethodName             = "/pb.Moment/Publish"
+	Moment_Moments_FullMethodName             = "/pb.Moment/Moments"
+	Moment_MomentDelete_FullMethodName        = "/pb.Moment/MomentDelete"
+	Moment_MomentDetail_FullMethodName        = "/pb.Moment/MomentDetail"
+	Moment_MomentUpdateContent_FullMethodName = "/pb.Moment/MomentUpdateContent"
+	Moment_RandomMoments_FullMethodName       = "/pb.Moment/RandomMoments"
 )
 
 // MomentClient is the client API for Moment service.
@@ -33,6 +35,8 @@ type MomentClient interface {
 	Moments(ctx context.Context, in *MomentsRequest, opts ...grpc.CallOption) (*MomentsResponse, error)
 	MomentDelete(ctx context.Context, in *MomentDeleteRequest, opts ...grpc.CallOption) (*MomentDeleteResponse, error)
 	MomentDetail(ctx context.Context, in *MomentDetailRequest, opts ...grpc.CallOption) (*MomentDetailResponse, error)
+	MomentUpdateContent(ctx context.Context, in *MomentUpdateContentRequest, opts ...grpc.CallOption) (*MomentUpdateContentResponse, error)
+	RandomMoments(ctx context.Context, in *RandomMomentsRequest, opts ...grpc.CallOption) (*RandomMomentsResponse, error)
 }
 
 type momentClient struct {
@@ -79,6 +83,24 @@ func (c *momentClient) MomentDetail(ctx context.Context, in *MomentDetailRequest
 	return out, nil
 }
 
+func (c *momentClient) MomentUpdateContent(ctx context.Context, in *MomentUpdateContentRequest, opts ...grpc.CallOption) (*MomentUpdateContentResponse, error) {
+	out := new(MomentUpdateContentResponse)
+	err := c.cc.Invoke(ctx, Moment_MomentUpdateContent_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *momentClient) RandomMoments(ctx context.Context, in *RandomMomentsRequest, opts ...grpc.CallOption) (*RandomMomentsResponse, error) {
+	out := new(RandomMomentsResponse)
+	err := c.cc.Invoke(ctx, Moment_RandomMoments_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MomentServer is the server API for Moment service.
 // All implementations must embed UnimplementedMomentServer
 // for forward compatibility
@@ -87,6 +109,8 @@ type MomentServer interface {
 	Moments(context.Context, *MomentsRequest) (*MomentsResponse, error)
 	MomentDelete(context.Context, *MomentDeleteRequest) (*MomentDeleteResponse, error)
 	MomentDetail(context.Context, *MomentDetailRequest) (*MomentDetailResponse, error)
+	MomentUpdateContent(context.Context, *MomentUpdateContentRequest) (*MomentUpdateContentResponse, error)
+	RandomMoments(context.Context, *RandomMomentsRequest) (*RandomMomentsResponse, error)
 	mustEmbedUnimplementedMomentServer()
 }
 
@@ -105,6 +129,12 @@ func (UnimplementedMomentServer) MomentDelete(context.Context, *MomentDeleteRequ
 }
 func (UnimplementedMomentServer) MomentDetail(context.Context, *MomentDetailRequest) (*MomentDetailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method MomentDetail not implemented")
+}
+func (UnimplementedMomentServer) MomentUpdateContent(context.Context, *MomentUpdateContentRequest) (*MomentUpdateContentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MomentUpdateContent not implemented")
+}
+func (UnimplementedMomentServer) RandomMoments(context.Context, *RandomMomentsRequest) (*RandomMomentsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RandomMoments not implemented")
 }
 func (UnimplementedMomentServer) mustEmbedUnimplementedMomentServer() {}
 
@@ -191,6 +221,42 @@ func _Moment_MomentDetail_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Moment_MomentUpdateContent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MomentUpdateContentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MomentServer).MomentUpdateContent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Moment_MomentUpdateContent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MomentServer).MomentUpdateContent(ctx, req.(*MomentUpdateContentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Moment_RandomMoments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RandomMomentsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MomentServer).RandomMoments(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Moment_RandomMoments_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MomentServer).RandomMoments(ctx, req.(*RandomMomentsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Moment_ServiceDesc is the grpc.ServiceDesc for Moment service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -213,6 +279,14 @@ var Moment_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "MomentDetail",
 			Handler:    _Moment_MomentDetail_Handler,
+		},
+		{
+			MethodName: "MomentUpdateContent",
+			Handler:    _Moment_MomentUpdateContent_Handler,
+		},
+		{
+			MethodName: "RandomMoments",
+			Handler:    _Moment_RandomMoments_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

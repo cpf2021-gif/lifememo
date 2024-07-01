@@ -1,0 +1,49 @@
+syntax = "v1"
+
+type (
+	MessageItem {
+		Id          int64  `json:"id"`
+		SenderId    int64  `json:"sender_id"`
+		ReceiverId  int64  `json:"receiver_id"`
+		Content     string `json:"content"`
+		CreatedTime int64  `json:"created_time"`
+	}
+)
+
+type (
+	// 发送消息
+	SentMessageRequest {
+		ReceiverId int64  `json:"receiver_id"`
+		Content    string `json:"content"`
+	}
+	SentMessageResponse {
+		MessageId int64 `json:"message_id"`
+	}
+
+	// 删除消息
+	DeleteMessageRequest {
+		MessageId int64 `json:"message_id"`
+	}
+	DeleteMessageResponse struct{}
+
+	// 消息列表
+	GetMessagesRequest {
+		TargetId int64 `json:"target_id"`
+	}
+	GetMessagesResponse {
+		Messages []*MessageItem `json:"messages"`
+	}
+)
+
+@server(
+	prefix: /v1/message
+	jwt: Auth
+)
+service message-api {
+	@handler SentMessage
+	post /sent (SentMessageRequest) returns (SentMessageResponse)
+	@handler DeleteMessage
+	post /delete (DeleteMessageRequest) returns (DeleteMessageResponse)
+	@handler GetMessages
+	post /list (GetMessagesRequest) returns (GetMessagesResponse)
+}

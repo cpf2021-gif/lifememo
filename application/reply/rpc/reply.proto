@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+package pb1;
+option go_package="./pb1";
+
+service Reply {
+  rpc Publish(PublishRequest) returns (PublishResponse);
+  rpc ReplyList(ReplyListRequest) returns (ReplyListResponse);
+  rpc ReplyDetail(ReplyDetailRequest) returns (ReplyDetailResponse);
+  rpc FindReply(FindReplyRequest) returns (FindReplyResponse);
+}
+
+message PublishRequest {
+  string bizId = 1;
+  int64  targetId = 2;
+  int64  replyUserId = 3;
+  int64  beReplyUserId = 4;
+  int64  parentId = 5;
+  string content = 6;
+  int64  status = 7;
+}
+
+message PublishResponse {
+  int64 ReplyId = 1;
+}
+
+message replyItem {
+  int64  replyId = 1;
+  string bizId = 2;
+  int64  targetId = 3;
+  int64  replyUserId = 4;
+  int64  beReplyUserId = 5;
+  int64  parentId = 6;
+  string content = 7;
+  int64  status = 8;
+  int64  createTime = 9;
+  int64  updateTime = 10;
+  int64 likeNum = 11;
+}
+
+message rootReplyItem {
+  int64  replyId = 1;
+  string bizId = 2;
+  int64  targetId = 3;
+  int64  replyUserId = 4;
+  int64  beReplyUserId = 5;
+  int64  parentId = 6;
+  string content = 7;
+  int64  status = 8;
+  int64  createTime = 9;
+  int64  updateTime = 10;
+  int64  likeNum = 11;
+  repeated replyItem replyItems = 12;
+}
+
+message ReplyListRequest {
+  string bizId = 1;
+  int64  targetId = 2;
+  int64 cursor = 3;
+  int32 pageSize = 4;
+  int32 sortType = 5;
+  int64 replyId = 6;
+}
+
+// 评论列表 每条评论只会显示两条回复
+message ReplyListResponse {
+  repeated rootReplyItem rootReplyItems = 1;
+  int64 cursor = 2;
+  bool isEnd = 3;
+  int64 replyId = 4;
+}
+
+message ReplyDetailRequest {
+  int64  replyId = 3;
+}
+
+message ReplyDetailResponse {
+  rootReplyItem rootReplyItem = 1;
+}
+
+// 搜索评论
+message FindReplyRequest {
+  int64  replyId = 3;
+}
+
+message FindReplyResponse {}

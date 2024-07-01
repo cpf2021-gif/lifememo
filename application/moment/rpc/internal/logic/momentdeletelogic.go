@@ -2,6 +2,8 @@ package logic
 
 import (
 	"context"
+	"errors"
+	"lifememo/application/moment/rpc/internal/model"
 
 	"lifememo/application/moment/rpc/internal/code"
 	"lifememo/application/moment/rpc/internal/svc"
@@ -36,6 +38,9 @@ func (l *MomentDeleteLogic) MomentDelete(in *pb.MomentDeleteRequest) (*pb.Moment
 	}
 
 	moment, err := l.svcCtx.MomentModel.FindOne(l.ctx, in.MomentId)
+	if errors.Is(err, model.ErrNotFound) {
+		return nil, code.MomentNotFound
+	}
 	if err != nil {
 		l.Logger.Errorf("MomentDelete FindOne req:%v, err:%v", in, err)
 		return nil, err

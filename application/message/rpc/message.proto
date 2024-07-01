@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package pb;
+option go_package = "./pb";
+
+service MessageService {
+  rpc SentMessage(SentMessageRequest) returns (SentMessageResponse);
+  rpc GetMessages(GetMessagesRequest) returns (GetMessagesResponse);
+  rpc DeleteMessage(DeleteMessageRequest) returns (DeleteMessageResponse);
+}
+
+message SentMessageRequest {
+  int64 senderId = 1;
+  int64 receiverId = 2;
+  string content = 3;
+}
+
+message SentMessageResponse {
+  int64 messageId = 1;
+}
+
+message MessageItem {
+  int64 messageId = 1;
+  int64 senderId = 2;
+  int64 receiverId = 3;
+  string content = 4;
+  int64 createdTime = 5;
+}
+
+message GetMessagesRequest {
+  int64 userId = 1;
+  int64 targetId = 2;
+}
+
+message GetMessagesResponse {
+  repeated MessageItem messages = 1;
+}
+
+message DeleteMessageRequest {
+  int64 messageId = 1;
+  int64 userId = 2;
+}
+
+message DeleteMessageResponse {}

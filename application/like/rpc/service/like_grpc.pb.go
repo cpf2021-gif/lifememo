@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Like_Thumbup_FullMethodName = "/service.Like/Thumbup"
+	Like_Thumbup_FullMethodName     = "/service.Like/Thumbup"
+	Like_IsThumbuped_FullMethodName = "/service.Like/isThumbuped"
 )
 
 // LikeClient is the client API for Like service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type LikeClient interface {
 	Thumbup(ctx context.Context, in *ThumbupRequest, opts ...grpc.CallOption) (*ThumbupResponse, error)
+	IsThumbuped(ctx context.Context, in *IsThumbupedRequest, opts ...grpc.CallOption) (*IsThumbupedResponse, error)
 }
 
 type likeClient struct {
@@ -46,11 +48,21 @@ func (c *likeClient) Thumbup(ctx context.Context, in *ThumbupRequest, opts ...gr
 	return out, nil
 }
 
+func (c *likeClient) IsThumbuped(ctx context.Context, in *IsThumbupedRequest, opts ...grpc.CallOption) (*IsThumbupedResponse, error) {
+	out := new(IsThumbupedResponse)
+	err := c.cc.Invoke(ctx, Like_IsThumbuped_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // LikeServer is the server API for Like service.
 // All implementations must embed UnimplementedLikeServer
 // for forward compatibility
 type LikeServer interface {
 	Thumbup(context.Context, *ThumbupRequest) (*ThumbupResponse, error)
+	IsThumbuped(context.Context, *IsThumbupedRequest) (*IsThumbupedResponse, error)
 	mustEmbedUnimplementedLikeServer()
 }
 
@@ -60,6 +72,9 @@ type UnimplementedLikeServer struct {
 
 func (UnimplementedLikeServer) Thumbup(context.Context, *ThumbupRequest) (*ThumbupResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Thumbup not implemented")
+}
+func (UnimplementedLikeServer) IsThumbuped(context.Context, *IsThumbupedRequest) (*IsThumbupedResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IsThumbuped not implemented")
 }
 func (UnimplementedLikeServer) mustEmbedUnimplementedLikeServer() {}
 
@@ -92,6 +107,24 @@ func _Like_Thumbup_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Like_IsThumbuped_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IsThumbupedRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LikeServer).IsThumbuped(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Like_IsThumbuped_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LikeServer).IsThumbuped(ctx, req.(*IsThumbupedRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Like_ServiceDesc is the grpc.ServiceDesc for Like service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -102,6 +135,10 @@ var Like_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Thumbup",
 			Handler:    _Like_Thumbup_Handler,
+		},
+		{
+			MethodName: "isThumbuped",
+			Handler:    _Like_IsThumbuped_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

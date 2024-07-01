@@ -13,21 +13,27 @@ import (
 )
 
 type (
-	MomentDeleteRequest  = pb.MomentDeleteRequest
-	MomentDeleteResponse = pb.MomentDeleteResponse
-	MomentDetailRequest  = pb.MomentDetailRequest
-	MomentDetailResponse = pb.MomentDetailResponse
-	MomentItem           = pb.MomentItem
-	MomentsRequest       = pb.MomentsRequest
-	MomentsResponse      = pb.MomentsResponse
-	PublishRequest       = pb.PublishRequest
-	PublishResponse      = pb.PublishResponse
+	MomentDeleteRequest         = pb.MomentDeleteRequest
+	MomentDeleteResponse        = pb.MomentDeleteResponse
+	MomentDetailRequest         = pb.MomentDetailRequest
+	MomentDetailResponse        = pb.MomentDetailResponse
+	MomentItem                  = pb.MomentItem
+	MomentUpdateContentRequest  = pb.MomentUpdateContentRequest
+	MomentUpdateContentResponse = pb.MomentUpdateContentResponse
+	MomentsRequest              = pb.MomentsRequest
+	MomentsResponse             = pb.MomentsResponse
+	PublishRequest              = pb.PublishRequest
+	PublishResponse             = pb.PublishResponse
+	RandomMomentsRequest        = pb.RandomMomentsRequest
+	RandomMomentsResponse       = pb.RandomMomentsResponse
 
 	Moment interface {
 		Publish(ctx context.Context, in *PublishRequest, opts ...grpc.CallOption) (*PublishResponse, error)
 		Moments(ctx context.Context, in *MomentsRequest, opts ...grpc.CallOption) (*MomentsResponse, error)
 		MomentDelete(ctx context.Context, in *MomentDeleteRequest, opts ...grpc.CallOption) (*MomentDeleteResponse, error)
 		MomentDetail(ctx context.Context, in *MomentDetailRequest, opts ...grpc.CallOption) (*MomentDetailResponse, error)
+		MomentUpdateContent(ctx context.Context, in *MomentUpdateContentRequest, opts ...grpc.CallOption) (*MomentUpdateContentResponse, error)
+		RandomMoments(ctx context.Context, in *RandomMomentsRequest, opts ...grpc.CallOption) (*RandomMomentsResponse, error)
 	}
 
 	defaultMoment struct {
@@ -59,4 +65,14 @@ func (m *defaultMoment) MomentDelete(ctx context.Context, in *MomentDeleteReques
 func (m *defaultMoment) MomentDetail(ctx context.Context, in *MomentDetailRequest, opts ...grpc.CallOption) (*MomentDetailResponse, error) {
 	client := pb.NewMomentClient(m.cli.Conn())
 	return client.MomentDetail(ctx, in, opts...)
+}
+
+func (m *defaultMoment) MomentUpdateContent(ctx context.Context, in *MomentUpdateContentRequest, opts ...grpc.CallOption) (*MomentUpdateContentResponse, error) {
+	client := pb.NewMomentClient(m.cli.Conn())
+	return client.MomentUpdateContent(ctx, in, opts...)
+}
+
+func (m *defaultMoment) RandomMoments(ctx context.Context, in *RandomMomentsRequest, opts ...grpc.CallOption) (*RandomMomentsResponse, error) {
+	client := pb.NewMomentClient(m.cli.Conn())
+	return client.RandomMoments(ctx, in, opts...)
 }

@@ -53,6 +53,7 @@ func (l *UpdateLogic) Update() {
 		}
 	}
 
+	// 存在删除未处理的点赞记录的可能
 	_, err = l.svcCtx.BizRedis.Del(LikeCronKey)
 	if err != nil {
 		l.Logger.Errorf("Del error:%v", err)
@@ -120,7 +121,7 @@ func (l *UpdateLogic) UpdateLikeNum(ctx context.Context, msg *types.ThumbupMsg, 
 					return nil
 				}
 				if err = l.svcCtx.LikeCountModel.UpdateWithSession(ctx, session, &model.LikeCount{
-					// Id:      likeCountRes.Id,
+					Id:      likeCountRes.Id,
 					BizId:   msg.BizId,
 					ObjId:   msg.ObjId,
 					LikeNum: likeCountRes.LikeNum - 1,
@@ -129,7 +130,7 @@ func (l *UpdateLogic) UpdateLikeNum(ctx context.Context, msg *types.ThumbupMsg, 
 				}
 			} else { // 点赞，需要加1
 				if err = l.svcCtx.LikeCountModel.UpdateWithSession(ctx, session, &model.LikeCount{
-					// Id:      likeCountRes.Id,
+					Id:      likeCountRes.Id,
 					BizId:   msg.BizId,
 					ObjId:   msg.ObjId,
 					LikeNum: likeCountRes.LikeNum + 1,

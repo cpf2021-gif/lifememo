@@ -1,0 +1,84 @@
+syntax = "v1"
+
+type (
+	ReplyItem {
+		ReplyId         int64  `json:"reply_id"`
+		BizId           string `json:"biz_id"`
+		TargetId        int64  `json:"target_id"`
+		ReplyUserId     int64  `json:"reply_user_id"`
+		BeRepliedUserId int64  `json:"be_replied_user_id"`
+		ParentId        int64  `json:"parent_id"`
+		Content         string `json:"content"`
+		Status          int64  `json:"status"`
+		CreateTime      int64  `json:"create_time"`
+		UpdateTime      int64  `json:"update_time"`
+		LikeNum         int64  `json:"like_num"`
+	}
+
+	RootReplyItem {
+		ReplyId         int64        `json:"reply_id"`
+		BizId           string       `json:"biz_id"`
+		TargetId        int64        `json:"target_id"`
+		ReplyUserId     int64        `json:"reply_user_id"`
+		BeRepliedUserId int64        `json:"be_replied_user_id"`
+		ParentId        int64        `json:"parent_id"`
+		Content         string       `json:"content"`
+		Status          int64        `json:"status"`
+		CreateTime      int64        `json:"create_time"`
+		UpdateTime      int64        `json:"update_time"`
+		LikeNum         int64        `json:"like_num"`
+		ReplyItems      []*ReplyItem `json:"reply_items"`
+	}
+)
+
+type (
+	// 发布评论
+	CommentPublishRequest {
+		BizId       string `json:"biz_id"`
+		TargetId    int64  `json:"target_id"`
+		BeRepliedId int64  `json:"be_replied_id"`
+		ParentId    int64  `json:"parent_id"`
+		Content     string `json:"content"`
+		Status      int64  `json:"status"`
+	}
+	CommentPublishResponse {
+		Id int64 `json:"id"`
+	}
+
+	// 评论列表
+	CommentListRequest {
+		BizId    string `json:"biz_id"`
+		TargetId int64  `json:"target_id"`
+		Cursor   int64  `json:"cursor"`
+		PageSize int32  `json:"page_size"`
+		SortType int32  `json:"sort_type"`
+		ReplyId  int64  `json:"reply_id"`
+	}
+	CommentListResponse {
+		ReplyItems []*RootReplyItem `json:"reply_items"`
+		Cursor     int64            `json:"cursor"`
+		IsEnd      bool             `json:"is_end"`
+		ReplyId    int64            `json:"reply_id"`
+	}
+
+	// 评论详细
+	CommentDetailRequest {
+		ReplyId int64 `json:"reply_id"`
+	}
+	CommentDetailResponse {
+		ReplyItem *RootReplyItem `json:"reply_item"`
+	}
+)
+
+@server(
+	prefix: /v1/comment
+	jwt: Auth
+)
+service comment-api {
+	@handler PublishComment
+	post /publish (CommentPublishRequest) returns (CommentPublishResponse)
+	@handler ListComment
+	post /list (CommentListRequest) returns (CommentListResponse)
+	@handler DetailComment
+	post /detail (CommentDetailRequest) returns (CommentDetailResponse)
+}

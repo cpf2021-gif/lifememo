@@ -12,4 +12,5 @@ type Config struct {
 		AccessExpire int64
 	}
 	MomentRPC zrpc.RpcClientConf
+	UserRPC   zrpc.RpcClientConf
 }

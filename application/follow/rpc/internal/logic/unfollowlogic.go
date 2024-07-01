@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"errors"
+	"lifememo/application/follow/rpc/internal/code"
 	"lifememo/application/follow/rpc/internal/model"
 	"lifememo/application/follow/rpc/internal/svc"
 	"lifememo/application/follow/rpc/internal/types"
@@ -30,11 +31,11 @@ func NewUnFollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UnFollow
 // UnFollow 取消关注
 func (l *UnFollowLogic) UnFollow(in *pb.UnFollowRequest) (*pb.UnFollowResponse, error) {
 	if in.UserId <= 0 || in.FollowedUserId <= 0 {
-		return &pb.UnFollowResponse{}, errors.New("参数错误")
+		return &pb.UnFollowResponse{}, code.FollowUserIdInvalid
 	}
 
 	if in.UserId == in.FollowedUserId {
-		return &pb.UnFollowResponse{}, errors.New("不能对自己进行操作")
+		return &pb.UnFollowResponse{}, code.DontFollowYourself
 	}
 
 	follow, err := l.svcCtx.FollowModel.FindOneByUserIdFollowedUserId(l.ctx, in.UserId, in.FollowedUserId)
@@ -44,11 +45,11 @@ func (l *UnFollowLogic) UnFollow(in *pb.UnFollowRequest) (*pb.UnFollowResponse, 
 	}
 
 	if errors.Is(err, model.ErrNotFound) {
-		return &pb.UnFollowResponse{}, errors.New("未关注")
+		return &pb.UnFollowResponse{}, code.NoFollowed
 	}
 
 	if follow != nil && follow.FollowStatus == types.FollowStatusUnfollow {
-		return &pb.UnFollowResponse{}, nil
+		return &pb.UnFollowResponse{}, code.UnFollowed
 	}
 
 	// 事务

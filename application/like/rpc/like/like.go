@@ -13,11 +13,14 @@ import (
 )
 
 type (
-	ThumbupRequest  = service.ThumbupRequest
-	ThumbupResponse = service.ThumbupResponse
+	IsThumbupedRequest  = service.IsThumbupedRequest
+	IsThumbupedResponse = service.IsThumbupedResponse
+	ThumbupRequest      = service.ThumbupRequest
+	ThumbupResponse     = service.ThumbupResponse
 
 	Like interface {
 		Thumbup(ctx context.Context, in *ThumbupRequest, opts ...grpc.CallOption) (*ThumbupResponse, error)
+		IsThumbuped(ctx context.Context, in *IsThumbupedRequest, opts ...grpc.CallOption) (*IsThumbupedResponse, error)
 	}
 
 	defaultLike struct {
@@ -34,4 +37,9 @@ func NewLike(cli zrpc.Client) Like {
 func (m *defaultLike) Thumbup(ctx context.Context, in *ThumbupRequest, opts ...grpc.CallOption) (*ThumbupResponse, error) {
 	client := service.NewLikeClient(m.cli.Conn())
 	return client.Thumbup(ctx, in, opts...)
+}
+
+func (m *defaultLike) IsThumbuped(ctx context.Context, in *IsThumbupedRequest, opts ...grpc.CallOption) (*IsThumbupedResponse, error) {
+	client := service.NewLikeClient(m.cli.Conn())
+	return client.IsThumbuped(ctx, in, opts...)
 }
